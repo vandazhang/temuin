@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Full-bleed background — safe zone is centre 80% (≈ 205–307px each axis) -->
+  <rect width="512" height="512" fill="#1C7C7C"/>
+  <text x="256" y="256"
+    dominant-baseline="central"
+    text-anchor="middle"
+    font-family="Arial Black, Arial, sans-serif"
+    font-size="220"
+    font-weight="900"
+    fill="white">T</text>
+</svg>

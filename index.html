@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Temuin — Direktori UMKM Jakarta</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#1C7C7C" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Temuin" />
+  <link rel="apple-touch-icon" href="icons/icon.svg" />
+
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-inner">
+      <a class="nav-logo" href="#" onclick="navigate('home')">
+        <img src="temuin_logo.png" alt="Temuin" class="nav-logo-img" />
+      </a>
+      <div class="nav-links">
+        <button class="btn-nav" onclick="navigate('browse', null)">Semua Bisnis</button>
+        <button class="btn-primary btn-sm" onclick="navigate('submit')">+ Daftarkan Bisnis</button>
+      </div>
+      <button class="hamburger" id="hamburger" onclick="toggleMenu()">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="mobile-menu" id="mobileMenu">
+      <button onclick="navigate('browse', null); toggleMenu()">Semua Bisnis</button>
+      <button onclick="navigate('submit'); toggleMenu()">+ Daftarkan Bisnis</button>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main id="app"></main>
+
+  <!-- MODAL OVERLAY -->
+  <div class="modal-overlay" id="modalOverlay" onclick="closeModal()">
+    <div class="modal-card" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img src="temuin_logo.png" alt="Temuin" class="footer-logo-img" />
+      </div>
+      <p>Direktori UMKM lokal terpercaya untuk warga Jakarta.</p>
+      <p class="footer-copy">© 2026 Temuin. Dibuat dengan ❤️ untuk Jakarta.</p>
+    </div>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      });
+    }
+  </script>
+</body>
+</html>

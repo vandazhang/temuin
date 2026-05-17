@@ -1,0 +1,26 @@
+{
+  "name": "Temuin",
+  "short_name": "Temuin",
+  "description": "Direktori UMKM lokal terpercaya untuk warga Jakarta.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#1C7C7C",
+  "background_color": "#F6FAFA",
+  "lang": "id",
+  "icons": [
+    {
+      "src": "icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-maskable.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}
