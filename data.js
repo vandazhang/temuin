@@ -17,21 +17,22 @@ const AREAS = [
   { id: 'Tangerang',       label: 'Tangerang',       icon: '🏘️', color: '#0D9488', bg: '#F0FDFA' },
 ];
 
-// ─── Category images (Unsplash, consistent per business via sig param) ────────
+// ─── Category fallback images (Pexels static CDN — no API key needed) ────────
+
+const PEXELS = 'https://images.pexels.com/photos';
+const Q      = '?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop';
 
 const CATEGORY_IMAGES = {
-  'bakery':   ['bakery,cake,pastry', 'cake,dessert,sweet', 'birthday+cake,bakery'],
-  'florist':  ['flowers,bouquet,floral', 'flower+arrangement,colorful', 'bouquet,roses,flowers'],
-  'laundry':  ['laundry,clean,clothes', 'folded+laundry,fresh', 'washing,laundry,white'],
-  'guru-les': ['tutoring,studying,education', 'books,learning,student', 'education,classroom'],
-  'katering': ['catering,food,buffet', 'indonesian+food,feast', 'food+spread,catering'],
+  'bakery':   `${PEXELS}/1291712/pexels-photo-1291712.jpeg${Q}`,  // layered cake
+  'florist':  `${PEXELS}/931177/pexels-photo-931177.jpeg${Q}`,    // flower bouquet
+  'laundry':  `${PEXELS}/5591664/pexels-photo-5591664.jpeg${Q}`,  // folded laundry
+  'guru-les': `${PEXELS}/256395/pexels-photo-256395.jpeg${Q}`,    // books / library
+  'katering': `${PEXELS}/1640777/pexels-photo-1640777.jpeg${Q}`,  // food spread
 };
-const DEFAULT_IMAGE_QUERY = 'small+business,shop,local';
+const DEFAULT_IMAGE = `${PEXELS}/1005638/pexels-photo-1005638.jpeg${Q}`;
 
-function getCategoryImage(catId, businessId) {
-  const queries = CATEGORY_IMAGES[catId] || [DEFAULT_IMAGE_QUERY];
-  const query   = queries[businessId % queries.length];
-  return `https://source.unsplash.com/600x400/?${query}&sig=${businessId}`;
+function getCategoryImage(catId) {
+  return CATEGORY_IMAGES[catId] || DEFAULT_IMAGE;
 }
 
 // ─── Category / area helpers ──────────────────────────────────────────────────

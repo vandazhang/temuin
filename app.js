@@ -289,15 +289,14 @@ function renderSubmit() {
 
 // ─── Business card ────────────────────────────────────────────────────────────
 function renderBusinessCard(b) {
-  const cat      = getCategoryById(b.category);
-  const imgSrc   = b.photo || getCategoryImage(b.category, b.id);
-  const fallback = getCategoryImage(b.category, b.id + 99);
+  const cat    = getCategoryById(b.category);
+  const imgSrc = b.photo || getCategoryImage(b.category);
 
   return `
     <article class="business-card" onclick="openBusinessModal(${b.id})">
       <div class="card-photo-wrap">
         <img src="${escHtml(imgSrc)}" alt="${escHtml(b.name)}" class="card-photo" loading="lazy"
-          onerror="this.onerror=null;this.src='${escHtml(fallback)}'"
+          onerror="this.onerror=null;this.src='${escHtml(DEFAULT_IMAGE)}'"
         />
         ${b.featured ? '<span class="card-badge">⭐ Unggulan</span>' : ''}
         <span class="card-cat-pill" style="background:${cat?.bg}; color:${cat?.color}">${cat?.icon} ${cat?.label}</span>
@@ -327,10 +326,9 @@ function openBusinessModal(id) {
   const b = getAllBusinesses().find(b => b.id === id);
   if (!b) return;
   const cat      = getCategoryById(b.category);
-  const imgSrc   = b.photo || getCategoryImage(b.category, b.id);
-  const fallback = getCategoryImage(b.category, b.id + 99);
+  const imgSrc   = b.photo || getCategoryImage(b.category);
   const photoHtml = `<img src="${escHtml(imgSrc)}" alt="${escHtml(b.name)}" class="modal-photo"
-    onerror="this.onerror=null;this.src='${escHtml(fallback)}'">`;
+    onerror="this.onerror=null;this.src='${escHtml(DEFAULT_IMAGE)}'">`;
 
   document.getElementById('modalContent').innerHTML = `
     ${photoHtml}
