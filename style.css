@@ -536,7 +536,12 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform .35s ease, opacity .3s ease;
+  opacity: 0;
 }
+.card-photo.loaded,
+.card-photo[src] { opacity: 1; }
+.business-card:hover .card-photo { transform: scale(1.04); }
 
 .card-photo-placeholder {
   width: 100%;

@@ -289,16 +289,16 @@ function renderSubmit() {
 
 // ─── Business card ────────────────────────────────────────────────────────────
 function renderBusinessCard(b) {
-  const cat = getCategoryById(b.category);
-  const initials = b.name.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
-  const photoHtml = b.photo
-    ? `<img src="${escHtml(b.photo)}" alt="${escHtml(b.name)}" class="card-photo" onerror="this.parentElement.innerHTML='<div class=card-photo-placeholder style=background:${cat?.bg || '#f3f4f6'}><span style=color:${cat?.color || '#6b7280'}>${initials}</span></div>'">`
-    : `<div class="card-photo-placeholder" style="background:${cat?.bg || '#f3f4f6'}"><span style="color:${cat?.color || '#6b7280'}">${initials}</span></div>`;
+  const cat      = getCategoryById(b.category);
+  const imgSrc   = b.photo || getCategoryImage(b.category, b.id);
+  const fallback = getCategoryImage(b.category, b.id + 99);
 
   return `
     <article class="business-card" onclick="openBusinessModal(${b.id})">
       <div class="card-photo-wrap">
-        ${photoHtml}
+        <img src="${escHtml(imgSrc)}" alt="${escHtml(b.name)}" class="card-photo" loading="lazy"
+          onerror="this.onerror=null;this.src='${escHtml(fallback)}'"
+        />
         ${b.featured ? '<span class="card-badge">⭐ Unggulan</span>' : ''}
         <span class="card-cat-pill" style="background:${cat?.bg}; color:${cat?.color}">${cat?.icon} ${cat?.label}</span>
       </div>
@@ -326,12 +326,11 @@ function renderBusinessCard(b) {
 function openBusinessModal(id) {
   const b = getAllBusinesses().find(b => b.id === id);
   if (!b) return;
-  const cat = getCategoryById(b.category);
-  const initials = b.name.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
-
-  const photoHtml = b.photo
-    ? `<img src="${escHtml(b.photo)}" alt="${escHtml(b.name)}" class="modal-photo" onerror="this.style.display='none'">`
-    : `<div class="modal-photo-placeholder" style="background:${cat?.bg || '#f3f4f6'}"><span style="color:${cat?.color || '#6b7280'}">${initials}</span></div>`;
+  const cat      = getCategoryById(b.category);
+  const imgSrc   = b.photo || getCategoryImage(b.category, b.id);
+  const fallback = getCategoryImage(b.category, b.id + 99);
+  const photoHtml = `<img src="${escHtml(imgSrc)}" alt="${escHtml(b.name)}" class="modal-photo"
+    onerror="this.onerror=null;this.src='${escHtml(fallback)}'">`;
 
   document.getElementById('modalContent').innerHTML = `
     ${photoHtml}
@@ -444,6 +443,12 @@ function bindEvents() {
   const onScroll = () => navbar?.classList.toggle('scrolled', window.scrollY > 10);
   window.removeEventListener('scroll', onScroll);
   window.addEventListener('scroll', onScroll, { passive: true });
+
+  // Fade in card images once loaded
+  document.querySelectorAll('.card-photo').forEach(img => {
+    if (img.complete) { img.classList.add('loaded'); }
+    else { img.addEventListener('load', () => img.classList.add('loaded'), { once: true }); }
+  });
 }
 
 function toggleMenu() {

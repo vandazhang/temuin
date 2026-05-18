@@ -17,6 +17,23 @@ const AREAS = [
   { id: 'Tangerang',       label: 'Tangerang',       icon: '🏘️', color: '#0D9488', bg: '#F0FDFA' },
 ];
 
+// ─── Category images (Unsplash, consistent per business via sig param) ────────
+
+const CATEGORY_IMAGES = {
+  'bakery':   ['bakery,cake,pastry', 'cake,dessert,sweet', 'birthday+cake,bakery'],
+  'florist':  ['flowers,bouquet,floral', 'flower+arrangement,colorful', 'bouquet,roses,flowers'],
+  'laundry':  ['laundry,clean,clothes', 'folded+laundry,fresh', 'washing,laundry,white'],
+  'guru-les': ['tutoring,studying,education', 'books,learning,student', 'education,classroom'],
+  'katering': ['catering,food,buffet', 'indonesian+food,feast', 'food+spread,catering'],
+};
+const DEFAULT_IMAGE_QUERY = 'small+business,shop,local';
+
+function getCategoryImage(catId, businessId) {
+  const queries = CATEGORY_IMAGES[catId] || [DEFAULT_IMAGE_QUERY];
+  const query   = queries[businessId % queries.length];
+  return `https://source.unsplash.com/600x400/?${query}&sig=${businessId}`;
+}
+
 // ─── Category / area helpers ──────────────────────────────────────────────────
 
 function getCategoryById(id) {
@@ -82,7 +99,7 @@ function rowToBusiness(headers, values, id) {
     city:        col('city'),
     whatsapp:    wa,
     instagram:   col('instagram').replace(/^@/, ''),
-    photo:       col('photo') || null,
+    photo:       col('image') || col('photo') || null,
     featured:    featRaw === 'yes' || featRaw === 'true',
   };
 }
