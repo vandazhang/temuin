@@ -25,7 +25,7 @@ const Q      = '?auto=compress&cs=tinysrgb&w=600&h=400&fit=crop';
 const CATEGORY_IMAGES = {
   'bakery':   `${PEXELS}/1291712/pexels-photo-1291712.jpeg${Q}`,  // layered cake
   'florist':  `${PEXELS}/931177/pexels-photo-931177.jpeg${Q}`,    // flower bouquet
-  'laundry':  `${PEXELS}/5591664/pexels-photo-5591664.jpeg${Q}`,  // folded laundry
+  'laundry':  `${PEXELS}/5591575/pexels-photo-5591575.jpeg${Q}`,  // washing machine
   'guru-les': `${PEXELS}/256395/pexels-photo-256395.jpeg${Q}`,    // books / library
   'katering': `${PEXELS}/1640777/pexels-photo-1640777.jpeg${Q}`,  // food spread
 };
