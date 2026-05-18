@@ -1,3 +1,6 @@
+const SHEETS_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSGlKxi2EdSM1-xerAQj8SG46kZFh5tWNClWOxS7XfH1Q2m24wuW8AVSlcU2U1mz1VNK99UL0ziGX9K/pub?output=csv';
+const CACHE_KEY  = 'temuin_sheet_v1';
+
 const CATEGORIES = [
   { id: 'bakery',    label: 'Bakery',    icon: '🎂', color: '#D97706', bg: '#FFFBEB' },
   { id: 'florist',   label: 'Florist',   icon: '🌸', color: '#EC4899', bg: '#FDF2F8' },
@@ -7,272 +10,124 @@ const CATEGORIES = [
 ];
 
 const AREAS = [
-  { id: 'Jakarta Utara',  label: 'Jakarta Utara',  icon: '🏖️', color: '#0EA5E9', bg: '#F0F9FF' },
+  { id: 'Jakarta Utara',   label: 'Jakarta Utara',   icon: '🏖️', color: '#0EA5E9', bg: '#F0F9FF' },
   { id: 'Jakarta Selatan', label: 'Jakarta Selatan', icon: '🌳', color: '#16A34A', bg: '#F0FDF4' },
-  { id: 'Jakarta Barat',  label: 'Jakarta Barat',  icon: '🏙️', color: '#6366F1', bg: '#EEF2FF' },
-  { id: 'Jakarta Timur',  label: 'Jakarta Timur',  icon: '🌅', color: '#EA580C', bg: '#FFF7ED' },
-  { id: 'Tangerang',      label: 'Tangerang',      icon: '🏘️', color: '#0D9488', bg: '#F0FDFA' },
+  { id: 'Jakarta Barat',   label: 'Jakarta Barat',   icon: '🏙️', color: '#6366F1', bg: '#EEF2FF' },
+  { id: 'Jakarta Timur',   label: 'Jakarta Timur',   icon: '🌅', color: '#EA580C', bg: '#FFF7ED' },
+  { id: 'Tangerang',       label: 'Tangerang',       icon: '🏘️', color: '#0D9488', bg: '#F0FDFA' },
 ];
+
+// ─── Category / area helpers ──────────────────────────────────────────────────
+
+function getCategoryById(id) {
+  return CATEGORIES.find(c => c.id === id) || {
+    id,
+    label: id.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
+    icon: '🏪',
+    color: '#6B7280',
+    bg: '#F3F4F6',
+  };
+}
 
 function getAreaById(id) {
   return AREAS.find(a => a.id === id) || null;
 }
 
-const SAMPLE_BUSINESSES = [
-  // --- BAKERY ---
-  {
-    id: 1,
-    name: 'Kikki Bakes',
-    category: 'bakery',
-    description: 'Custom cake & korean cake.',
-    address: 'PIK, Jakarta Utara',
-    city: 'Jakarta Utara',
-    whatsapp: '6281333335129',
-    instagram: 'kikkibakes.id',
-    photo: null,
-    featured: true,
-  },
-  {
-    id: 2,
-    name: 'By Sowon',
-    category: 'bakery',
-    description: 'Korean cake.',
-    address: 'Rawamangun, Jakarta Timur',
-    city: 'Jakarta Timur',
-    whatsapp: '6281399891316',
-    instagram: '_by.sowon',
-    photo: null,
-    featured: false,
-  },
-  {
-    id: 3,
-    name: 'Auguri',
-    category: 'bakery',
-    description: 'Custom cake & entremet.',
-    address: 'Pluit, Jakarta Utara',
-    city: 'Jakarta Utara',
-    whatsapp: '628111342507',
-    instagram: 'auguri.id',
-    photo: null,
-    featured: false,
-  },
-  {
-    id: 4,
-    name: 'Wanderbakes',
-    category: 'bakery',
-    description: 'Custom cake, same day order.',
-    address: 'Cengkareng, Jakarta Barat',
-    city: 'Jakarta Barat',
-    whatsapp: '6281218801119',
-    instagram: 'wanderbakes_id',
-    photo: null,
-    featured: false,
-  },
-  {
-    id: 5,
-    name: 'Bake Hour',
-    category: 'bakery',
-    description: 'Custom cake.',
-    address: 'BSD, Tangerang',
-    city: 'Tangerang',
-    whatsapp: '6285789588881',
-    instagram: 'bakehour__',
-    photo: null,
-    featured: false,
-  },
-  {
-    id: 6,
-    name: 'HepiBento',
-    category: 'bakery',
-    description: 'Custom cake & bento cake.',
-    address: 'Kebayoran Lama, Jakarta Selatan',
-    city: 'Jakarta Selatan',
-    whatsapp: '628176756567',
-    instagram: 'hepibento',
-    photo: null,
-    featured: false,
-  },
-  {
-    id: 7,
-    name: 'Yumiru',
-    category: 'bakery',
-    description: 'Birthday cake, pie tart, number cake.',
-    address: 'Gading Serpong, Tangerang',
-    city: 'Tangerang',
-    whatsapp: '6287875737844',
-    instagram: 'yumiru.id',
-    photo: null,
-    featured: false,
-  },
-  {
-    id: 8,
-    name: 'Rinku Patisserie',
-    category: 'bakery',
-    description: 'Birthday cake & custom cake.',
-    address: 'PIK, Jakarta Utara',
-    city: 'Jakarta Utara',
-    whatsapp: '6281927121120',
-    instagram: 'rinku.patisserie',
-    photo: null,
-    featured: false,
-  },
-  {
-    id: 9,
-    name: 'Bakelove',
-    category: 'bakery',
-    description: 'Custom cake.',
-    address: 'Alam Sutera, Tangerang',
-    city: 'Tangerang',
-    whatsapp: '6281905624722',
-    instagram: 'bakelove.id',
-    photo: null,
-    featured: false,
-  },
-  {
-    id: 10,
-    name: 'Moree Cake Co',
-    category: 'bakery',
-    description: 'Custom cake, urgent order.',
-    address: 'Pluit, Jakarta Utara',
-    city: 'Jakarta Utara',
-    whatsapp: '6281218194878',
-    instagram: 'moreecakeco',
-    photo: null,
-    featured: false,
-  },
-  // --- FLORIST ---
-  {
-    id: 11,
-    name: 'Bluemerie',
-    category: 'florist',
-    description: 'Fresh flowers, dried flowers, wedding flowers.',
-    address: 'Pluit, Jakarta Utara',
-    city: 'Jakarta Utara',
-    whatsapp: '6287872577899',
-    instagram: 'blumerie.florist',
-    photo: null,
-    featured: true,
-  },
-  {
-    id: 12,
-    name: 'Florentinefleur',
-    category: 'florist',
-    description: 'Custom bouquet.',
-    address: 'Kembangan, Jakarta Barat',
-    city: 'Jakarta Barat',
-    whatsapp: '6281286228852',
-    instagram: 'florentinefleur.co',
-    photo: null,
-    featured: false,
-  },
-  {
-    id: 13,
-    name: 'Rena the Blossom',
-    category: 'florist',
-    description: 'Giant bouquet.',
-    address: 'Pluit, Jakarta Utara',
-    city: 'Jakarta Utara',
-    whatsapp: '6285117099112',
-    instagram: 'renatheblossom',
-    photo: null,
-    featured: false,
-  },
-  {
-    id: 14,
-    name: 'The Fleuriste',
-    category: 'florist',
-    description: 'Custom bouquet.',
-    address: 'Kembangan, Jakarta Barat',
-    city: 'Jakarta Barat',
-    whatsapp: '6287777600988',
-    instagram: 'thefleuristeofficial',
-    photo: null,
-    featured: false,
-  },
-  {
-    id: 15,
-    name: 'Rosy Posy',
-    category: 'florist',
-    description: 'Fresh flowers, dried flowers.',
-    address: 'Palmerah, Jakarta Barat',
-    city: 'Jakarta Barat',
-    whatsapp: '6281299218885',
-    instagram: 'rosyposy.florist',
-    photo: null,
-    featured: false,
-  },
-  {
-    id: 16,
-    name: 'KIKUKO Florist Artistry',
-    category: 'florist',
-    description: 'Same day bouquet.',
-    address: 'Joglo, Jakarta Barat',
-    city: 'Jakarta Barat',
-    whatsapp: '6282112111120',
-    instagram: 'kikukoflorist',
-    photo: null,
-    featured: false,
-  },
-  {
-    id: 17,
-    name: 'Bluerette',
-    category: 'florist',
-    description: 'Urgent flower order.',
-    address: 'Tanjung Duren, Jakarta Barat',
-    city: 'Jakarta Barat',
-    whatsapp: '6287782666447',
-    instagram: 'bluretteflorist',
-    photo: null,
-    featured: false,
-  },
-  {
-    id: 18,
-    name: 'Reverose',
-    category: 'florist',
-    description: 'Urgent order.',
-    address: 'Greenlake, Tangerang',
-    city: 'Tangerang',
-    whatsapp: '6285158671911',
-    instagram: 'reverose.florist',
-    photo: null,
-    featured: false,
-  },
-  {
-    id: 19,
-    name: 'White Lily Florist',
-    category: 'florist',
-    description: 'Flower bouquet, vase, flower box, wedding.',
-    address: 'Lebak Bulus, Jakarta Selatan',
-    city: 'Jakarta Selatan',
-    whatsapp: '62818102424',
-    instagram: 'whitelily.florist',
-    photo: null,
-    featured: false,
-  },
-  {
-    id: 20,
-    name: 'Phane',
-    category: 'florist',
-    description: 'Urgent order.',
-    address: 'Kuningan, Jakarta Selatan',
-    city: 'Jakarta Selatan',
-    whatsapp: '6287871972868',
-    instagram: 'phaneflorist',
-    photo: null,
-    featured: false,
-  },
-];
+// ─── CSV parser (handles quoted fields containing commas) ─────────────────────
 
-// Merge with user-submitted businesses from localStorage
+function parseCSV(text) {
+  const rows = [];
+  let row = [], field = '', inQuotes = false;
+
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i], next = text[i + 1];
+    if (inQuotes) {
+      if (ch === '"' && next === '"') { field += '"'; i++; }
+      else if (ch === '"')            { inQuotes = false; }
+      else                            { field += ch; }
+    } else {
+      if      (ch === '"')  { inQuotes = true; }
+      else if (ch === ',')  { row.push(field); field = ''; }
+      else if (ch === '\n' || ch === '\r') {
+        if (ch === '\r' && next === '\n') i++;
+        row.push(field); field = '';
+        if (row.some(f => f.trim())) rows.push(row);
+        row = [];
+      } else { field += ch; }
+    }
+  }
+  if (field || row.length) { row.push(field); if (row.some(f => f.trim())) rows.push(row); }
+  return rows;
+}
+
+// ─── Map one CSV row → business object ───────────────────────────────────────
+
+function rowToBusiness(headers, values, id) {
+  const col = name => {
+    const idx = headers.findIndex(h => h.toLowerCase().trim() === name.toLowerCase());
+    return idx >= 0 ? (values[idx] || '').trim() : '';
+  };
+
+  const phone  = col('phone').replace(/\D/g, '');
+  const wa     = phone.startsWith('0') ? '62' + phone.slice(1) : phone;
+  const catId  = col('category').toLowerCase().replace(/\s+/g, '-');
+  const featRaw = col('featured').toLowerCase();
+
+  return {
+    id,
+    name:        col('name'),
+    category:    catId,
+    description: col('description'),
+    address:     col('address'),
+    city:        col('city'),
+    whatsapp:    wa,
+    instagram:   col('instagram').replace(/^@/, ''),
+    photo:       col('photo') || null,
+    featured:    featRaw === 'yes' || featRaw === 'true',
+  };
+}
+
+// ─── Fetch sheet, parse, cache; fall back to cache when offline ───────────────
+
+async function fetchBusinesses() {
+  try {
+    const res = await fetch(SHEETS_CSV, { cache: 'no-store' });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+    const rows = parseCSV(await res.text());
+    if (rows.length < 2) throw new Error('empty sheet');
+
+    const headers = rows[0];
+    let businesses = rows.slice(1).map((r, i) => rowToBusiness(headers, r, i + 1));
+
+    // No Featured column? Auto-feature the first entry per category
+    const hasFeaturedCol = headers.some(h => h.toLowerCase().trim() === 'featured');
+    if (!hasFeaturedCol) {
+      const seen = new Set();
+      businesses = businesses.map(b => {
+        if (!seen.has(b.category)) { seen.add(b.category); return { ...b, featured: true }; }
+        return b;
+      });
+    }
+
+    localStorage.setItem(CACHE_KEY, JSON.stringify(businesses));
+    return businesses;
+
+  } catch (err) {
+    console.warn('Temuin: sheet fetch failed, using cache.', err.message);
+    const cached = localStorage.getItem(CACHE_KEY);
+    return cached ? JSON.parse(cached) : [];
+  }
+}
+
+// ─── Runtime data accessors ───────────────────────────────────────────────────
+
 function getAllBusinesses() {
-  const stored = JSON.parse(localStorage.getItem('temuin_businesses') || '[]');
-  return [...SAMPLE_BUSINESSES, ...stored];
+  const sheet     = JSON.parse(localStorage.getItem(CACHE_KEY)          || '[]');
+  const submitted = JSON.parse(localStorage.getItem('temuin_businesses') || '[]');
+  return [...sheet, ...submitted];
 }
 
 function saveBusinesses(businesses) {
   localStorage.setItem('temuin_businesses', JSON.stringify(businesses));
-}
-
-function getCategoryById(id) {
-  return CATEGORIES.find(c => c.id === id) || null;
 }

@@ -483,7 +483,19 @@ function showToast(msg, type = 'success') {
   setTimeout(() => t.classList.remove('show'), 3500);
 }
 
+// ─── Loading state ────────────────────────────────────────────────────────────
+function renderLoading() {
+  return `
+    <div class="loading-state">
+      <div class="loading-spinner"></div>
+      <p>Memuat bisnis…</p>
+    </div>
+  `;
+}
+
 // ─── Boot ─────────────────────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  document.getElementById('app').innerHTML = renderLoading();
+  await fetchBusinesses();
   render();
 });
